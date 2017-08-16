@@ -5,3 +5,7 @@ services:
 deploy:
   provider: heroku
   api_key: 8542047f-7817-4c32-884f-89d2e02ae16f
+  app: intense-bayou-56203
+  on:
+    repo: SMuyesser/themoviegame-api
+    
