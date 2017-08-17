@@ -1,10 +1,11 @@
 language: node_js
 node_js: node
 services:
-    - mongodb
+- mongodb
 deploy:
   provider: heroku
-  api_key: 
+  api_key:
+    secure: q0t4mLb4Wrm0uCSRRnvDSPHc3G9Sw97448mWtQ+tzGbKxkG/wAL4qxL0E8v39AXVbF0fbddoupbJX45FPYckedz9zQf0uNNnohad0ysh9+sjifoLNQRhjBfJfn7KJVb3qCf3LVjq/BzsDbGkr8Wg2DaDKlmcwouv/2m9u3yNRnOuY2EbGMS0FckstmTTox42pw1lAsOgA8jucdFuoDZtD/Z1FYuV4KoPxrd5UXqYcB+CEvqBKceDBUzCDMHttbFvi9rJMbSz4TZdaqJ/cOvbWjvzMvPeXzYVE1XcL2mlkPXYIPeoNHgW1BiaEVqNIb2SbM/kye63PS8Tmk8KOzT9WahKLX3MfUDBIVFvmKBkZa/6599LHc6gsiNUhsBG8lW4+K3OMuNHkpXurv10FbszTTjWtap0LXbv0Md7aqjuGIqTf8IEJEzaOQkSKpSw1z1Ue24FogAkyGPFC1r3rbLlXmtrX4jUpn3PBTGXjQ1Cex5QCLuZXRmjrTvKZRNllUg4gP3rqJ3c6WDjL0KNff4HeNB/MgDdumMpSvrQYEvu/nfht6rSpChXBMcUD1eRTfL3waRSW5C6yp4OQ0sKCLCC27QM4BlzZZIxWnadfkqGAQJ7jrzyLQZZOzkpbEPq5auxV5mfuYXFSgx/c5fP+3ictJj7+Q8gkN2hMvBg0AVsoVs=
   app: intense-bayou-56203
   on:
     repo: SMuyesser/themoviegame-api
