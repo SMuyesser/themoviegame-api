@@ -5,7 +5,8 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const {CLIENT_ORIGIN, TMDB_API_KEY, PORT} = require('./config');
+const {CLIENT_ORIGIN, PORT, TMDB_API_KEY} = require('./config');
+
 
 const app = express();
 app.use(morgan('common'));
