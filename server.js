@@ -12,17 +12,17 @@ const {CLIENT_ORIGIN, PORT, API_KEY} = require('./config');
 
 const app = express();
 app.use(morgan('common'));
+
+app.set('views', path.join(__dirname, 'views'));
+app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
+app.set('view engine', 'handlebars');
+
 app.use(
 	cors({
 		origin: CLIENT_ORIGIN
 	})
 );
 app.use(bodyParser.json());
-
-app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
-app.set('view engine', 'handlebars');
-
 
 //get movie options
 app.get('/movieoptions/:title', (req, res) => {
