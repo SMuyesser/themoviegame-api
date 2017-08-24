@@ -29,7 +29,7 @@ router.post('/register', function(req, res) {
 
 	// If there are errors, render the form with errors, otherwise create new player with success msg, and go to login page
 	if(errors){
-		res.render('register', {
+		res.send('/register', {
 			errors: errors
 		});
 	} else {

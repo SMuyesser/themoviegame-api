@@ -13,16 +13,16 @@ const PlayerSchema = mongoose.Schema({
 		type: String
 	},
 	scores: [{
-			start: {
-				type: String
-			},
-			end: {
-				type: String
-			},
-			links: {
-				type: Number
-			}
-		}]
+		start: {
+			type: String
+		},
+		end: {
+			type: String
+		},
+		links: {
+			type: Number
+		}
+	}]
 });
 
 
