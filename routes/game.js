@@ -7,13 +7,7 @@ const cors = require('cors');
 
 const app = express();
 
-const {API_KEY, CLIENT_ORIGIN} = require('../config');
-
-app.use(
-	cors({
-		origin: CLIENT_ORIGIN
-	})
-);
+const {API_KEY} = require('../config');
 
 //get movie options
 router.get('/movieoptions/:title', (req, res) => {

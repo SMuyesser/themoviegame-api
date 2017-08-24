@@ -30,16 +30,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
 app.set('view engine', 'handlebars');
 
+app.use(bodyParser.json());
+app.use(cookieParser());
+
 app.use(
 	cors({
 		origin: CLIENT_ORIGIN
 	})
 );
-app.use(bodyParser.json());
-app.use(cookieParser());
-
-// Set Static Folder public
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Express Session
 app.use(session({
