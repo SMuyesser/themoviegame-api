@@ -6,7 +6,7 @@ const axios = require('axios');
 const cors = require('cors');
 
 
-const {API_KEY} = require('../config');
+const {API_KEY, CLIENT_ORIGIN} = require('../config');
 
 router.use(
 	cors({
