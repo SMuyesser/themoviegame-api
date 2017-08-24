@@ -3,8 +3,16 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const mongodb = require('mongodb');
 const axios = require('axios');
+const cors = require('cors');
+
 
 const {API_KEY} = require('../config');
+
+router.use(
+	cors({
+		origin: CLIENT_ORIGIN
+	})
+);
 
 //get movie options
 router.get('/movieoptions/:title', (req, res) => {
