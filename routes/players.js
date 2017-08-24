@@ -7,11 +7,21 @@ const passport = require('passport');
 const PlayerStrategy = require('passport-local').Strategy;
 const axios = require('axios');
 const cors = require('cors');
+const flash = require('connect-flash');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+
+
+const {DATABASE_URL, CLIENT_ORIGIN} = require('./../config');
+const Player = require('../models/playerschema');
 
 const app = express();
 
-const Player = require('../models/playerschema');
-const DATABASE_URL = require('./../config');
+app.use(
+	cors({
+		origin: CLIENT_ORIGIN
+	})
+);
 
 // Register New Player
 router.post('/register', function(req, res) {
@@ -29,7 +39,7 @@ router.post('/register', function(req, res) {
 
 	// If there are errors, render the form with errors, otherwise create new player with success msg, and go to login page
 	if(errors){
-		res.send('/register', {
+		res.send(CLIENT_ORIGIN+'/register', {
 			errors: errors
 		});
 	} else {
@@ -37,14 +47,12 @@ router.post('/register', function(req, res) {
 
 		// Creates mongoose new player, then success message and redirect to login
 		Player.createPlayer(newPlayer)
-		.then(function(player){
-			req.flash('success_msg', 'You are registered and can track your greatness!');
-			res.redirect('/players/login');
+		.then(function(response){
+			res.send("Success");
 		})
 		.catch(function(err) {
 			console.error(err);
-			req.flash('error_msg', 'An error occured');
-			res.redirect('register');	
+			res.send("Error");	
 		})
 	}
 });
