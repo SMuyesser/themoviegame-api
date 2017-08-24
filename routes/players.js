@@ -6,10 +6,20 @@ const db = require('mongodb').Db;
 const passport = require('passport');
 const PlayerStrategy = require('passport-local').Strategy;
 const axios = require('axios');
+const cors = require('cors');
 
+const app = express();
 
 const Player = require('../models/playerschema');
 const DATABASE_URL = require('./../config');
+
+const {CLIENT_ORIGIN} = require('../config');
+
+app.use(
+	cors({
+		origin: CLIENT_ORIGIN
+	})
+);
 
 // Register New Player
 router.post('/register', function(req, res) {

@@ -5,10 +5,11 @@ const mongodb = require('mongodb');
 const axios = require('axios');
 const cors = require('cors');
 
+const app = express();
 
 const {API_KEY, CLIENT_ORIGIN} = require('../config');
 
-router.use(
+app.use(
 	cors({
 		origin: CLIENT_ORIGIN
 	})
