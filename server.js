@@ -57,6 +57,16 @@ app.get('/castmembermovies/:castMemberId', (req, res) => {
 	})
 })
 
+app.get('/castinfo/:castMemberId', (req, res) => {
+	axios.get('https://api.themoviedb.org/3/person/'+req.params.castMemberId+'?api_key='+API_KEY+'&language=en-US')
+	.then(info => {
+		res.send(info.data)
+	})
+	.catch(error => {
+		console.error(error);
+	})
+})
+
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 module.exports = {app};
