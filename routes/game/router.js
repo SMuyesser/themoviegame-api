@@ -1,19 +1,9 @@
 const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-const mongodb = require('mongodb');
 const axios = require('axios');
-const cors = require('cors');
 
-const app = express();
+const router = express.Router();
 
-const {API_KEY, CLIENT_ORIGIN} = require('../config');
-
-app.use(
-	cors({
-		origin: CLIENT_ORIGIN
-	})
-);
+const {API_KEY} = require('../../config');
 
 //get movie options
 router.get('/movieoptions/:title', (req, res) => {
@@ -59,4 +49,4 @@ router.get('/castinfo/:castMemberId', (req, res) => {
 	})
 })
 
-module.exports = router;
+module.exports = {router};

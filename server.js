@@ -1,109 +1,68 @@
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-const path = require('path');
-const exphbs = require('express-handlebars');
-const expressValidator = require('express-validator');
-const flash = require('connect-flash');
-const session = require('express-session');
+require('dotenv').config();
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const MongoStore = require('connect-mongo') (session);
+const express = require('express');
 const mongoose = require('mongoose');
-const mongodb = require('mongodb');
-const db = require('mongodb').Db;
+const morgan = require('morgan');
 const passport = require('passport');
-const PlayerStrategy = require('passport-local').Strategy;
-const dotenv = require('dotenv');
-dotenv.load();
 
-const Player = require('./models/playerschema');
-const {CLIENT_ORIGIN, PORT, DATABASE_URL} = require('./config');
-const players = require('./routes/players');
-const game = require('./routes/game');
-
-const app = express();
-app.use(morgan('common'));
-
-app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
-app.set('view engine', 'handlebars');
-
-app.use(bodyParser.json());
-app.use(cookieParser());
-
-app.use(
-	cors({
-		origin: CLIENT_ORIGIN
-	})
-);
-
-// Express Session
-app.use(session({
-	secret: 'random string',
-	store: new MongoStore({
-    url: DATABASE_URL,
-    autoRemove: 'n'
-  }),
-  resave: true,
-  saveUninitialized: true
-}));
-
-// Passport init
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Express Validator
-app.use(expressValidator({
-  errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
-      , root    = namespace.shift()
-      , formParam = root;
-
-    while(namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
-    }
-    return {
-      param : formParam,
-      msg   : msg,
-      value : value
-    };
-  }
-}));
-
-// Connect Flash
-app.use(flash());
-
-// Global Variables for flash messages
-app.use(function (req, res, next) {
-	res.locals.success_msg = req.flash('success_msg');
-	res.locals.error_msg = req.flash('error_msg');
-	res.locals.error = req.flash('error');
-  // Access the player anywhere, if not it will just be null
-  res.locals.player = req.player || null;
-	next();
-});
-
-app.use('/players', players);
-app.use('/game', game);
+const {router: authRouter, basicStrategy, jwtStrategy} = require('./routes/auth');
+const {router: gameRouter} = require('./routes/game');
+const {router: playersRouter} = require('./routes/players');
 
 mongoose.Promise = global.Promise;
 
-// closeServer needs access to a server object, but that only
-// gets created when `runServer` runs, so declare `server` here
-// and then assign a value to it in run
+const {PORT, DATABASE_URL, CLIENT_ORIGIN} = require('./config');
+
+const app = express();
+
+// Logging
+app.use(morgan('common'));
+
+// CORS
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.send(204);
+  }
+  next();
+});
+
+app.use(passport.initialize());
+passport.use(basicStrategy);
+passport.use(jwtStrategy);
+
+app.use('/auth/', authRouter);
+app.use('/game/', gameRouter);
+app.use('/players/', playersRouter);
+
+// A protected endpoint which needs a valid JWT to access it
+app.get('/protected',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        return res.json({
+            data: 'rosebud'
+        });
+    }
+);
+
+app.use('*', (req, res) => {
+  return res.status(404).json({message: 'Not Found'});
+});
+
+// Referenced by both runServer and closeServer. closeServer
+// assumes runServer has run and set `server` to a server object
 let server;
 
-// this function connects to the database, then starts the server
-function runServer(databaseUrl=DATABASE_URL, port=PORT) {
+function runServer() {
   return new Promise((resolve, reject) => {
-    mongoose.connect(databaseUrl, err => {
+    mongoose.connect(DATABASE_URL, err => {
       if (err) {
         return reject(err);
       }
-      server = app.listen(port, () => {
-        console.log(`Your app is listening on port ${port}`);
+      server = app.listen(PORT, () => {
+        console.log(`Your app is listening on port ${PORT}`);
         resolve();
       })
       .on('error', err => {
@@ -114,7 +73,6 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
   });
 }
 
-// this function closes the server, and returns a promise
 function closeServer() {
   return mongoose.disconnect().then(() => {
      return new Promise((resolve, reject) => {
@@ -129,25 +87,9 @@ function closeServer() {
   });
 }
 
-// Generic response if page not found
-app.use('*', function(req, res) {
-  res.status(404).json({message: 'Not Found'});
-});
-
-// if app.js is called directly (aka, with `node app.js`), this block
-// runs. but also export the runServer command so other code test code can start the server as needed.
 if (require.main === module) {
   runServer().catch(err => console.error(err));
 };
 
-module.exports = {runServer, app, closeServer};
+module.exports = {app, runServer, closeServer};
 
-// Function to ensure non players can't get into player functions
-/*function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		req.flash('error_msg', 'You must be logged in to access this page.');
-		res.redirect('/players/login');
-	}
-}*/
