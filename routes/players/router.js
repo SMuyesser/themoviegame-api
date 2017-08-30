@@ -8,6 +8,9 @@ const router = express.Router();
 
 const jsonParser = bodyParser.json();
 
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(jsonParser);
+
 // Post to register a new user
 router.post('/', jsonParser, (req, res) => {
   const requiredFields = ['playername', 'password', 'email'];
@@ -128,11 +131,33 @@ router.post('/', jsonParser, (req, res) => {
     });
 });
 
-router.get('/', (req, res) => {
+
+//post scores for player
+router.put('/scores/:player', (req, res) => {
+  Player.findOne({'playername':req.params.player}, function (err, player) {  
+      if (err) {
+          res.status(500).send(err);
+      } else {
+          console.log(req.body);
+          player.scores = [...player.scores, req.body];
+
+          // Save the updated document back to the database
+          player.save(function (err, player) {
+              if (err) {
+                  res.status(500).send(err)
+              }
+              res.send(player);
+          });
+      }
+  });
+});
+
+
+/*router.get('/', (req, res) => {
   return Player
     .find()
     .then(players => res.json(players.map(player => player.apiRepr())))
     .catch(err => res.status(500).json({message: 'Internal server error'}));
-});
+});*/
 
 module.exports = {router};

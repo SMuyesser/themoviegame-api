@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const router = express.Router();
 
-const {API_KEY} = require('../../config');
+const {API_KEY, DATABASE_URL} = require('../../config');
 
 //get movie options
 router.get('/movieoptions/:title', (req, res) => {

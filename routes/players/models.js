@@ -21,10 +21,20 @@ const PlayerSchema = mongoose.Schema({
 		start: {
 			type: String
 		},
+		startPic: {
+			type: String
+		},
 		end: {
 			type: String
 		},
-		links: {
+		endPic: {
+			type: String
+		},
+		links: [{
+			type: String
+		
+		}],
+		linkCount: {
 			type: Number
 		}
 	}]
