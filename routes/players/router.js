@@ -152,12 +152,14 @@ router.put('/scores/:player', (req, res) => {
   });
 });
 
-
-/*router.get('/', (req, res) => {
-  return Player
-    .find()
-    .then(players => res.json(players.map(player => player.apiRepr())))
-    .catch(err => res.status(500).json({message: 'Internal server error'}));
-});*/
+router.get('/scores/:player', (req, res) => {
+  Player.findOne({'playername':req.params.player}, function (err, player) {  
+      if (err) {
+          res.status(500).send(err);
+      } else {
+          res.send(player.scores);
+      }
+  })
+});
 
 module.exports = {router};
