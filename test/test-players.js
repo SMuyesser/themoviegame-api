@@ -44,7 +44,7 @@ describe('/players', function() {
 
   describe('/players', function() {
     describe('POST', function() {
-      it('Should reject users with missing playername', function() {
+      it('Should reject players with missing playername', function() {
         return chai.request(app)
           .post('/players')
           .send({
@@ -64,7 +64,7 @@ describe('/players', function() {
             expect(res.body.location).to.equal('playername');
           });
       });
-      it('Should reject users with missing password', function() {
+      it('Should reject players with missing password', function() {
         return chai.request(app)
           .post('/players')
           .send({
@@ -331,49 +331,6 @@ describe('/players', function() {
             expect(player).to.not.be.null;
             expect(player.email).to.equal(email);
           })
-      });
-    });
-
-    describe('GET', function() {
-      it('Should return an empty array initially', function() {
-        return chai.request(app)
-          .get('/players')
-          .then(res => {
-            expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
-            expect(res.body).to.have.length(0);
-          });
-      });
-      it('Should return an array of players', function() {
-        return Player.create({
-          playername,
-          password,
-          email,
-          scores
-        }, {
-          playername: playernameB,
-          password: passwordB,
-          email: emailB,
-          scores: scoresB
-        })
-        .then(() => chai.request(app).get('/players'))
-        .then(res => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body).to.have.length(2);
-          expect(res.body[0].playername).to.equal(playername);
-          expect(res.body[0].email).to.equal(email);
-          expect(res.body[0].password).to.equal(password);
-          expect(res.body[0].scores.start).to.equal(scores.start);
-          expect(res.body[0].scores.end).to.equal(scores.end);
-          expect(res.body[0].scores.links).to.equal(scores.links);
-          expect(res.body[1].playername).to.equal(playernameB);
-          expect(res.body[1].email).to.equal(emailB);
-          expect(res.body[1].password).to.equal(passwordB);
-          expect(res.body[1].scores.start).to.equal(scoresB.start);
-          expect(res.body[1].scores.end).to.equal(scoresB.end);
-          expect(res.body[1].scores.links).to.equal(scoresB.links);
-        });
       });
     });
   });
