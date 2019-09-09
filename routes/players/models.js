@@ -24,8 +24,7 @@ const PlayerSchema = mongoose.Schema({
 		startPic: {
 			type: String
 		},
-		end: {
-			type: String
+		end: {			type: String
 		},
 		endPic: {
 			type: String
