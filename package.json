@@ -17,7 +17,7 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "heroku-client": "^3.0.3",
-    "jsonwebtoken": "^7.4.3",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^4.11.7",
     "morgan": "^1.8.2",
     "nodemon": "^1.11.0",
